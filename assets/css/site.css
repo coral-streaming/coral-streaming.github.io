@@ -1,0 +1,11 @@
+body {
+  min-height: 2000px;
+  padding-top: 50px;
+}
+
+#carousel-main .carousel-inner{
+  height: 300px;
+}
+.carousel-control.left, .carousel-control.right {
+    background-image: none
+}
