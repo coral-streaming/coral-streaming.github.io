@@ -14,10 +14,12 @@ body {
 
 .navbar-coral a:hover {
   background-color: #1693A5;
+  color: white;
 }
 
 .nav > li > a:hover {
   background-color: #1693A5;
+  color: white;
 }
 
 #carousel-main .carousel-inner{
