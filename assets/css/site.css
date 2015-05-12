@@ -8,6 +8,14 @@ body {
 	color: white;
 }
 
+.navbar-coral a {
+  color: white;
+}
+
+.navbar-coral a:hover {
+  background-color: #1693A5;
+}
+
 #carousel-main .carousel-inner{
   height: 300px;
 }
