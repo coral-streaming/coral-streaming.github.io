@@ -16,7 +16,7 @@ body {
   background-color: #1693A5;
 }
 
-.nav .navbar-nav a:hover {
+.nav > li > a:hover {
   background-color: #1693A5;
 }
 
