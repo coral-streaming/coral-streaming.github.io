@@ -3,6 +3,11 @@ body {
   padding-top: 50px;
 }
 
+.navbar-coral {
+  background-color:#ADD8C7;
+	color: white;
+}
+
 #carousel-main .carousel-inner{
   height: 300px;
 }
