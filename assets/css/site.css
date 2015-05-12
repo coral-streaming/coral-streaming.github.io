@@ -16,6 +16,10 @@ body {
   background-color: #1693A5;
 }
 
+.nav a:hover {
+  background-color: #1693A5;
+}
+
 #carousel-main .carousel-inner{
   height: 300px;
 }
