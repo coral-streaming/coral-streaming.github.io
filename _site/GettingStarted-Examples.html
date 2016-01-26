@@ -456,10 +456,20 @@ They have all recommended to use the Coral platform for this use case.</p>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;httpbroadcast&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span><span class="p">,</span>
     <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span><span class="p">,</span>
     <span class="nt">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;heartbeat&quot;</span>
+    <span class="p">},</span> <span class="nt">&quot;groupby&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;zscore1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;zscore&quot;</span><span class="p">,</span> 
+    <span class="nt">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;score&quot;</span><span class="p">:</span> <span class="mf">2.0</span>
     <span class="p">}</span>
   <span class="p">},</span> <span class="p">{</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;httpclient1&quot;</span><span class="p">,</span>
@@ -470,12 +480,13 @@ They have all recommended to use the Coral platform for this use case.</p>
       <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;POST&quot;</span> 
     <span class="p">}</span>
   <span class="p">}],</span> <span class="nt">&quot;links&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator2&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator3&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator4&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;lookup1&quot;</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;lookup1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;httpclient1&quot;</span> <span class="p">}</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator2&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator3&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;generator4&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;stats1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;broadcast1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;zscore1&quot;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;zscore1&quot;</span><span class="p">,</span> <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;httpclient1&quot;</span> <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span></code></pre></figure>
 

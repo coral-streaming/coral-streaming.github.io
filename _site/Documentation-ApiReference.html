@@ -443,20 +443,24 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right">                                                    <a href="">POST /api/cluster</a></td>
-      <td style="text-align: left">Join a node to or remove a node from the cluster</td>
+      <td style="text-align: right">                                    <a href="">POST /api/platform/cluster</a></td>
+      <td style="text-align: left">Join or remove a node from the cluster                </td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/stats</a></td>
+      <td style="text-align: right"><a href="">GET /api/platform/cluster</a></td>
+      <td style="text-align: left">Returns all machines in the Coral platform</td>
+    </tr>
+    <tr>
+      <td style="text-align: right"><a href="">GET /api/platform/cluster/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: left">Get information on machine <code>&lt;id&gt;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: right"><a href="">GET /api/platform/stats</a></td>
       <td style="text-align: left">Show statistics for the entire platform</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/settings</a></td>
+      <td style="text-align: right"><a href="">GET /api/platform/settings</a></td>
       <td style="text-align: left">Returns all settings of the platform</td>
-    </tr>
-    <tr>
-      <td style="text-align: right"><a href="">GET /api/cluster</a></td>
-      <td style="text-align: left">Returns all machines in the Coral platform</td>
     </tr>
   </tbody>
 </table>
