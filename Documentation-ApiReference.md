@@ -120,11 +120,11 @@ Show platform statistics, change platform settings and add and remove nodes from
 
 URL | action
 ---: | :--
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/platform/cluster]() | Join or remove a node from the cluster&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[GET&nbsp;/api/platform/cluster]() | Returns all machines in the Coral platform
-[GET&nbsp;/api/platform/cluster/`<id>`]() | Get information on machine `<id>`
-[GET&nbsp;/api/platform/stats]() | Show statistics for the entire platform
-[GET&nbsp;/api/platform/settings]() | Returns all settings of the platform
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/platform/cluster](API-POST-cluster.html) | Join or remove a node from the cluster&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[GET&nbsp;/api/platform/cluster](API-GET-cluster.html) | Returns all machines in the Coral platform
+[GET&nbsp;/api/platform/cluster/`<id>`](API-GET-cluster-machine.html) | Get information on machine `<id>`
+[GET&nbsp;/api/platform/stats](API-GET-platform-stats.html) | Show statistics for the entire platform
+[GET&nbsp;/api/platform/settings](API-GET-platform-settings.html) | Returns all settings of the platform
 
 <br>
 
@@ -135,13 +135,13 @@ Create, start and stop runtimes and get information and statistics of runtimes.
 URL | action
 ---: | :---
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/runtimes](API-POST-runtime.html) | Create a new runtime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[GET&nbsp;/api/runtimes/`<id>`]() | Gets the definition of runtime `<id>`
-[GET&nbsp;/api/runtimes/`<id>`/actors]() | Gets all actors for runtime `<id>`
-[GET&nbsp;/api/runtimes/`<id>`/links]() | Gets all links for runtime `<id>`
-[GET&nbsp;/api/runtimes/`<id>`/stats]() | Gets statistics about runtime `<id>`
+[GET&nbsp;/api/runtimes/`<id>`](API-GET-runtime.html) | Gets the definition of runtime `<id>`
+[GET&nbsp;/api/runtimes/`<id>`/actors](API-GET-runtime-actors.html) | Gets all actors for runtime `<id>`
+[GET&nbsp;/api/runtimes/`<id>`/links](API-GET-runtime-links.html) | Gets all links for runtime `<id>`
+[GET&nbsp;/api/runtimes/`<id>`/stats](API-GET-runtime-stats.html) | Gets statistics about runtime `<id>`
 [PATCH&nbsp;/api/runtimes/`<id>`](API-PATCH-runtime.html) | Starts or stops runtime `<id>`
-[DELETE&nbsp;/api/runtimes/`<id>`]() | Deletes runtime `<id>`
-[DELETE&nbsp;/api/runtimes]() | Delete all runtimes
+[DELETE&nbsp;/api/runtimes/`<id>`](API-DELETE-runtime.html) | Deletes runtime `<id>`
+[DELETE&nbsp;/api/runtimes](API-DELETE-all-runtimes.html) | Delete all runtimes
 
 <br>
 
@@ -151,10 +151,10 @@ Interact with individual actors in a runtime and get actor statistics.
 
 URL | action
 ---: | :--
-[POST&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`]() | Post JSON to actor `<aid>` in runtime `<rid>`
-[POST&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`/shunt]() | Post JSON to `<aid>` in `<rid>` and return
-[GET&nbsp;/api/runtimes/`<id>`/actors]() | Gets information of all actors in runtime `<id>`
-[GET&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`/stats]() | Get stats about actor `<aid>` in runtime `<rid>`
+[POST&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`](API-POST-actor.html) | Post JSON to actor `<aid>` in runtime `<rid>`
+[POST&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`/shunt](API-POST-actor-shunt.html) | Post JSON to `<aid>` in `<rid>` and return
+[GET&nbsp;/api/runtimes/`<id>`/actors](API-GET-actors.html) | Gets information of all actors in runtime `<id>`
+[GET&nbsp;/api/runtimes/`<rid>`/actors/`<aid>`/stats](API-GET-actor-stats.html) | Get stats about actor `<aid>` in runtime `<rid>`
 
 <br>
 
@@ -164,10 +164,10 @@ Add and remove users from the platform.
 
 URL | action
 ---: | :--
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/users]() | Post a new user with permissions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[GET&nbsp;/api/users/`<id>`]() | Returns information for user `<id>`
-[GET&nbsp;/api/users]() | Returns all users on the platform
-[DELETE&nbsp;/api/users/`<id>`]() | Deletes user `<id>`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/users](API-POST-user.html) | Post a new user with permissions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[GET&nbsp;/api/users/`<id>`](API-GET-user.html) | Returns information for user `<id>`
+[GET&nbsp;/api/users](API-GET-all-users.html) | Returns all users on the platform
+[DELETE&nbsp;/api/users/`<id>`](API-delete-user.html) | Deletes user `<id>`
 
 <br>
 
@@ -177,10 +177,10 @@ Add, remove and change permissions for users on the platform.
 
 URL | action
 ---: | :---
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/runtimes/`<id>`/permissions]() | Add a new permission to runtime `<id>`
-[GET&nbsp;/api/runtimes/`<id>`/permissions]() | Gets all permissions for runtime `<id>`
-[PATCH&nbsp;/api/runtimes/`<id>`/permissions]() | Set permission granted/denied in runtime `<id>`
-[DELETE&nbsp;/api/runtimes/`<id>`/permissions]() | Delete a permission from runtime `<id>`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/runtimes/`<id>`/permissions](API-POST-permission.html) | Add a new permission to runtime `<id>`
+[GET&nbsp;/api/runtimes/`<id>`/permissions](API-GET-permissions.html) | Gets all permissions for runtime `<id>`
+[PATCH&nbsp;/api/runtimes/`<id>`/permissions](API-PATCH-permission.html) | Set permission granted/denied in runtime `<id>`
+[DELETE&nbsp;/api/runtimes/`<id>`/permissions](API-DELETE-permission.html) | Delete a permission from runtime `<id>`
 
 
 <br>
@@ -193,7 +193,7 @@ Create, delete or change projects.
 
 URL | action
 ---: | :--
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/projects]() | Create a new project&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[GET&nbsp;/api/projects]() | Get all projects on the platform
-[PATCH&nbsp;/api/projects/`<id>`]() | Update a project definition of project `<id>`
-[DELETE&nbsp;/api/projects/`<id>`]() | Delete project `<id>`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[POST&nbsp;/api/projects](API-POST-project.html) | Create a new project&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[GET&nbsp;/api/projects](API-GET-projects.html) | Get all projects on the platform
+[PATCH&nbsp;/api/projects/`<id>`](API-PATCH-project.html) | Update a project definition of project `<id>`
+[DELETE&nbsp;/api/projects/`<id>`](API-DELETE-project.html) | Delete project `<id>`

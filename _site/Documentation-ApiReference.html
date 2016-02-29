@@ -177,6 +177,18 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
+                    	    <a href="/Documentation-StateCalculation.html">
+	                        	
+                	        			State calculation
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
                     	    <a href="/Documentation-ApiReference.html">
 	                        	
                 	        			API Reference
@@ -443,23 +455,23 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right">                                    <a href="">POST /api/platform/cluster</a></td>
+      <td style="text-align: right">                                    <a href="API-POST-cluster.html">POST /api/platform/cluster</a></td>
       <td style="text-align: left">Join or remove a node from the cluster                </td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/platform/cluster</a></td>
+      <td style="text-align: right"><a href="API-GET-cluster.html">GET /api/platform/cluster</a></td>
       <td style="text-align: left">Returns all machines in the Coral platform</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/platform/cluster/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-GET-cluster-machine.html">GET /api/platform/cluster/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Get information on machine <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/platform/stats</a></td>
+      <td style="text-align: right"><a href="API-GET-platform-stats.html">GET /api/platform/stats</a></td>
       <td style="text-align: left">Show statistics for the entire platform</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/platform/settings</a></td>
+      <td style="text-align: right"><a href="API-GET-platform-settings.html">GET /api/platform/settings</a></td>
       <td style="text-align: left">Returns all settings of the platform</td>
     </tr>
   </tbody>
@@ -484,19 +496,19 @@ This method refers to the runtime by its unique UUID assigned when creating the 
       <td style="text-align: left">Create a new runtime                                                 </td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-GET-runtime.html">GET /api/runtimes/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Gets the definition of runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code>/actors</a></td>
+      <td style="text-align: right"><a href="API-GET-runtime-actors.html">GET /api/runtimes/<code>&lt;id&gt;</code>/actors</a></td>
       <td style="text-align: left">Gets all actors for runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code>/links</a></td>
+      <td style="text-align: right"><a href="API-GET-runtime-links.html">GET /api/runtimes/<code>&lt;id&gt;</code>/links</a></td>
       <td style="text-align: left">Gets all links for runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code>/stats</a></td>
+      <td style="text-align: right"><a href="API-GET-runtime-stats.html">GET /api/runtimes/<code>&lt;id&gt;</code>/stats</a></td>
       <td style="text-align: left">Gets statistics about runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
@@ -504,11 +516,11 @@ This method refers to the runtime by its unique UUID assigned when creating the 
       <td style="text-align: left">Starts or stops runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">DELETE /api/runtimes/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-DELETE-runtime.html">DELETE /api/runtimes/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Deletes runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">DELETE /api/runtimes</a></td>
+      <td style="text-align: right"><a href="API-DELETE-all-runtimes.html">DELETE /api/runtimes</a></td>
       <td style="text-align: left">Delete all runtimes</td>
     </tr>
   </tbody>
@@ -529,19 +541,19 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right"><a href="">POST /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-POST-actor.html">POST /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code></a></td>
       <td style="text-align: left">Post JSON to actor <code>&lt;aid&gt;</code> in runtime <code>&lt;rid&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">POST /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code>/shunt</a></td>
+      <td style="text-align: right"><a href="API-POST-actor-shunt.html">POST /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code>/shunt</a></td>
       <td style="text-align: left">Post JSON to <code>&lt;aid&gt;</code> in <code>&lt;rid&gt;</code> and return</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code>/actors</a></td>
+      <td style="text-align: right"><a href="API-GET-actors.html">GET /api/runtimes/<code>&lt;id&gt;</code>/actors</a></td>
       <td style="text-align: left">Gets information of all actors in runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code>/stats</a></td>
+      <td style="text-align: right"><a href="API-GET-actor-stats.html">GET /api/runtimes/<code>&lt;rid&gt;</code>/actors/<code>&lt;aid&gt;</code>/stats</a></td>
       <td style="text-align: left">Get stats about actor <code>&lt;aid&gt;</code> in runtime <code>&lt;rid&gt;</code></td>
     </tr>
   </tbody>
@@ -562,19 +574,19 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right">                                                          <a href="">POST /api/users</a></td>
+      <td style="text-align: right">                                                          <a href="API-POST-user.html">POST /api/users</a></td>
       <td style="text-align: left">Post a new user with permissions                         </td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/users/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-GET-user.html">GET /api/users/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Returns information for user <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/users</a></td>
+      <td style="text-align: right"><a href="API-GET-all-users.html">GET /api/users</a></td>
       <td style="text-align: left">Returns all users on the platform</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">DELETE /api/users/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-delete-user.html">DELETE /api/users/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Deletes user <code>&lt;id&gt;</code></td>
     </tr>
   </tbody>
@@ -595,19 +607,19 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right">               <a href="">POST /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
+      <td style="text-align: right">               <a href="API-POST-permission.html">POST /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
       <td style="text-align: left">Add a new permission to runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
+      <td style="text-align: right"><a href="API-GET-permissions.html">GET /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
       <td style="text-align: left">Gets all permissions for runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">PATCH /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
+      <td style="text-align: right"><a href="API-PATCH-permission.html">PATCH /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
       <td style="text-align: left">Set permission granted/denied in runtime <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">DELETE /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
+      <td style="text-align: right"><a href="API-DELETE-permission.html">DELETE /api/runtimes/<code>&lt;id&gt;</code>/permissions</a></td>
       <td style="text-align: left">Delete a permission from runtime <code>&lt;id&gt;</code></td>
     </tr>
   </tbody>
@@ -628,19 +640,19 @@ This method refers to the runtime by its unique UUID assigned when creating the 
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: right">                                                    <a href="">POST /api/projects</a></td>
+      <td style="text-align: right">                                                    <a href="API-POST-project.html">POST /api/projects</a></td>
       <td style="text-align: left">Create a new project                                                  </td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">GET /api/projects</a></td>
+      <td style="text-align: right"><a href="API-GET-projects.html">GET /api/projects</a></td>
       <td style="text-align: left">Get all projects on the platform</td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">PATCH /api/projects/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-PATCH-project.html">PATCH /api/projects/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Update a project definition of project <code>&lt;id&gt;</code></td>
     </tr>
     <tr>
-      <td style="text-align: right"><a href="">DELETE /api/projects/<code>&lt;id&gt;</code></a></td>
+      <td style="text-align: right"><a href="API-DELETE-project.html">DELETE /api/projects/<code>&lt;id&gt;</code></a></td>
       <td style="text-align: left">Delete project <code>&lt;id&gt;</code></td>
     </tr>
   </tbody>
