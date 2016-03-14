@@ -20,36 +20,82 @@ title: GroupByActor
 -->
 
 # GroupByActor
-The `GroupByActor` is a technical [Coral Actor](/actors/overview/) that can partition an event stream based on unique values of an input field. The `GroupByActor` will relay messages to the correct actor, depending on the value of the input field, and will create a child actor for values that it did not see before.
+The `GroupByActor` is a [Coral Actor](/actors/overview/) that can partition an event stream based on unique values of
+one or more input field(s). The `GroupByActor` will relay messages to the correct actor(s), depending on the value of
+the input field(s), and will create a child actor(s) for values that it did not see before.
 
 ## Creating a GroupByActor
-The `GroupByActor` is not created directly. If an actor that supports grouping has the group by field specified in its constructor, a GroupByActor will be created. The `GroupByActor` will redirect the object to the correct actor for distinct values of the group by field.
+The `GroupByActor` is especially useful in combination with state full actors, such as [StatsActor](Actors-StatsActor.html).
+A `GroupByActor` can trigger multiple [Coral Actor](/actors/overview/), including an other `GroupByActor`. For each
+emit-target the `GroupByActor` will create a child-actor for distinct values of the group by field(s) and relays the
+JSON to this child-actor.
 
 #### Example
+<br>
+<img src="img/example-groupby.png">
+<br>
+The JSON looks as follows:
 {% highlight json %}
 {
-  "type": "stats",
-  "params": {
-    "field": "amount"
-  }, "group": {
-    "by": "tag"
-  }
+  "name": "runtime1",
+  "actors": [{
+    "type": "kafka-consumer",
+    "params": {
+    "topic": "healthstream",
+    "kafka": {
+     "zookeeper.connect": "localhost:2181",
+     "group.id": "mygroup"
+    }
+  }, {
+    "name": "groupbyPerson",
+    "type": "groupby",
+    "params": {
+      "field": "personid" <sup>or: "fields": \["personid"\]</sup>
+    }
+  }, {
+    "name": "heartrate",
+    "type": "stats",
+    "params": {
+      "field": "heartbeat"
+    }
+  }, {
+    "name": "bloodpressure",
+    "type": "stats",
+    "params": {
+      "field": "bloodpressure"
+    }
+  }], "links": [
+   { "from": "kafka-consumer", "to": "groupbyPerson" },
+   { "from": "groupbyPerson", "to": "stats1" },
+   { "from": "groupbyPerson", "to": "stats2" }
+  ]
 }
 {% endhighlight %}
 
-In this example, a [StatsActor](Actors-StatsActor.html) is being created partitioned by the field 'tag'.  The Coral platform creates a `GroupByActor`, and waits for distinct values of the 'tag' field. An actual instance of the `StatsActor` is only created when a 'tag' field comes along containing a new value that was not encountered before.
+In this example, a `GroupByActor` is  being created, which partitions the JSON by the field 'personid'. It creates for
+every distinct value of the 'personid' field two child-Actors (both of type `StatsActor`), if not already created, and
+relays the JSON to these child-actors.
+The following URLs can be used to retrieve the state values.
+ 
+ URL | action
+ ---: | :--
+ [GET&nbsp;/api/runtimes/<b>runtime1</b>/actors/<b>groupbyPerson</b>/<b>personid</b>/<b>heartrate</b>/state] | Get state (avg, min/max. etc) of actor `heartrate` for the specific distinct value determined by `groupbyPerson`.
+ [GET&nbsp;/api/runtimes/<b>runtime1</b>/actors/<b>groupbyPerson</b>/<b>personid</b>/<b>bloodpressure</b>/state] | Get state (avg, min/max. etc) of actor `bloodpressure` for the specific distinct value determined by `groupbyPerson`.
+
 
 ## Trigger
-The `GroupByActor` reads the value of the group by field from the trigger JSON. If such a field is found, the JSON will be relayed as trigger for the corresponding underlying actor. For a newly encountered value a new actor will be created. If the group by field is not found, nothing is done.
+The `GroupByActor` reads the value of the group by field from the trigger JSON. If such a field is found, the JSON will
+be relayed as trigger for the corresponding underlying actor(s). For a newly encountered value new actor(s) will be created.
+If the group by field is not found, nothing is done.
 
 ## Emit
-The `GroupByActor` does not emit anything itself. However, underlying actors may emit.
+The `GroupByActor` does not emits the trigger JSON to the child actor(s).
 
 ## State
-The `GroupByActor` does not keep state. However, if underlying actors do keep state, this state can be collected from the `GroupByActor`.
+The `GroupByActor` does not keep state.
 
 ## Collect
-The `GroupByActor` does not collect state from other actors. The underlying actors however may do so.
+The `GroupByActor` does not collect state from other actors.
 
 ## Timer
-The `GroupByActor` does not itself have a timer function implemented. The underlying actors, however, can have timer functions.
+The `GroupByActor` does not have a timer function implemented.
