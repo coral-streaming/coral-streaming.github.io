@@ -2,6 +2,7 @@
 title: Architecture
 layout: default
 topic: Overview
+topic_order: 1
 order: 1
 ---
 <!--
@@ -40,7 +41,7 @@ order: 1
 
 Coral is a platform that enables real-time, streaming/event-driven analytics. In short, Coral transforms events coming from an event bus (at this time only Kafka) into other events which can be sent to Kafka or other API's. 
 
-On Coral, users define *runtimes*. A *runtime* is a single configuration which is created by a user and performs a specific transformation to the input data. Multiple *runtimes* can run at the same time on the platform. Each of these runtimes processes events according to its runtime definition which was provided in the JSON constructor of the runtime. A typical runtime consists of multiple different *actors* which each perform a single task on the events that are sent to it, and outputs a transformed event when triggered.
+On Coral, users define *runtimes*. A *runtime* is a single configuration which is created by a user and performs a specific transformation to the input data. Multiple runtimes can run at the same time on the platform. Each of these runtimes process events according to their runtime definition. A typical runtime consists of multiple different *actors* which each perform a single task on the events that are sent to it, and outputs a transformed event when triggered.
 
 A global overview of the architecture of Coral is shown in the picture below.
 
@@ -57,7 +58,7 @@ Each node in the cluster is identical, and is started by the exact same program 
 Coral is a *reactive* system, meaning that it fulfills these four requirements (taken from the [Reactive Manifesto](http://www.reactivemanifesto.org)):
 
 - **Responsiveness**  
-Requests are handled in a couple of milliseconds. Of course, the exact time depends on the specific request.
+Requests are typically handled in a couple of milliseconds, and some operations only take in the order of nanoseconds to complete. Of course, the exact time depends on the specific request.
 - **Resiliency**  
 The system is designed for failure and can restore after a crash.
 - **Elasticity**  
@@ -76,8 +77,8 @@ machine can take over the operation of the failed one. To achieve this, all even
 Thanks to [Akka](http://www.akka.io), [Cassandra](http://cassandra.apache.org) and [Kafka](http://kafka.apache.org), which are all distributed, linearly scalable systems, Coral is linearly scalable as well. Each node is identical to any other, and new nodes can be added to the system through the RESTful interface.
 - **Security**  
 Coral uses Basic Authentication to authenticate users. Each individual API call must be executed with a Basic Authentication header. Depending on the authentication mode chosen (see [Security](#security)), the user name and password will be checked against a stored value. If authenticated, an authorization check will be performed on the combination of the used method (GET, POST, etc), URL and user.
-- **Millisecond-range response times**  
-Thanks to the use of [Spray](http://www.spray.io) and the Akka actor framework, most requests can be handled within milliseconds. Of course, this depends on the specific task that needs to be executed.
+- **Sub-millisecond-range response times**  
+Thanks to the use of [Spray](http://www.spray.io) and the Akka actor framework, most requests can be handled within a few milliseconds or even nanoseconds. Of course, this depends on the specific task that needs to be executed.
 - **Functional programming**  
 By applying functional programming techniques, we hope to reduce the number of bugs in code. Most of the code is completely stateless, except for variables inside of actors. Thus far, it has worked out pretty well!
 
@@ -105,17 +106,17 @@ The Coral platform is controlled through its RESTful API. There are several *res
 
 - **Platform**  
 The platform itself has settings and statistics which can be obtained through the /api/platform endpoint.
-Platform statistics contains information about the number of machines currently in the cluster, the number of runtimes running on it, and other information.
+Platform statistics contains information about the number of machines currently in the cluster, the number of runtimes running on it, and other information about the Coral cluster as a whole.
 - **Runtimes**  
-Runtimes are the most important resource that can be controlled by the API. Runtimes can be created with a POST operation and started and stopped with a PATCH operation.
+Runtimes are the most important resource that can be controlled by the API. Runtimes can be created with a POST operation and started and stopped with a PATCH operation. Statistics on runtimes can be obtained by a GET operation on the endpoint of the runtime.
 - **Actors**  
-Interaction with individual actors that are present in runtimes is possible. This way statistics can be obtained for specific actors, or individual (debug) messages can be posted to an actor. In Coral, each actor in a runtime has its own standard endpoint.
+Interaction with individual actors that are present in runtimes is possible. This way statistics can be obtained for specific actors, or individual (debug) messages can be posted to an actor. In Coral, each actor in a runtime gets its own endpoint.
 - **Users**  
 If Coral's internal authentication mechanism is used, users can be added and granted permissions to specific runtimes and API calls.
 - **Permissions**  
-Access to individual resources and combinations of users, verbs (POST, PATCH, etc) and endpoints can be controlled by permission objects.
+Access to individual endpoints can be controlled with the permission API. Individual API calls can be allowed or denied for specific users or HTTP verbs.
 - **Projects**  
-Currently not present, but in the future, projects could be created in which users can design runtimes.
+Currently not present, but in the future, projects could be created in which users can create runtime definitions, which can then be started as runtimes.
 
 The full list of endpoints is given in the [API Reference](Documentation-ApiReference.html).
 
@@ -155,11 +156,11 @@ The advantage of JSON is that objects can be specfied and parsed at runtime. Alt
 - **Serializability**  
 The JSON format is completely serializable, meaning that a string representation of each JSON object can created without problems, which is then sent over a TCP connection between nodes, and which is then decoded again in a JSON object.
 
-A Coral actor is not aware of all sources from which it receives JSON objects, nor is it aware of all targets to which the output of its calculation must be sent. This is handled by the Coral platform. The only thing an actor knows is which operation to perform when it is "triggered" by an incoming JSON object.
+A Coral actor does not need to be aware of all sources from which it receives JSON objects, nor does it need to be aware of all targets to which the output of its calculation must be sent. This is handled by the Coral platform. The only thing an actor knows is which operation to perform when it is "triggered" by an incoming JSON object.
 
 Nodes in the cluster communicate with each other through Akka's [Gossip](http://doc.akka.io/docs/akka/2.4.1/common/cluster.html#membership) protocol. 
 
-Since each runtime is assigned in its completeness to a single node, excessive TCP traffic caused by messages from Kafka are prevented. The only messages that cross node boundaries are API requests which are redirected to the proper machines.
+Since each runtime is assigned in its completeness to a single node, excessive TCP traffic caused by messages from Kafka are prevented, but if messages are delivered to the wrong node, Coral will redirect them to the right one. The only messages that typically cross node boundaries, however, are API requests which are redirected to the proper machines.
 
 --------------------------
 

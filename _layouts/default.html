@@ -24,7 +24,7 @@
     <div class="container">
         <div class="row content">
             <div class="col-md-3 menu" style="text-align: right; margin-left: -150px">
-            {% assign topics = site.pages | group_by: "topic" | sort:"topic" | reverse %}
+            {% assign topics = site.pages | group_by: "topic" | sort:"topic_order" | reverse %}
             {% for topic in topics %}
             	{% if topic.name != 'API Reference' %}
 	                <div class="row">

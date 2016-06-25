@@ -2,6 +2,7 @@
 layout: default
 title: Examples
 topic: Getting started
+topic_order: 2
 order: 5
 ---
 <!--

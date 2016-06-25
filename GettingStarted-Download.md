@@ -2,6 +2,7 @@
 title: Download
 layout: default
 topic: Getting started
+topic_order: 2
 order: 2
 ---
 <!--

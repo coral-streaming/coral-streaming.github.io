@@ -2,7 +2,8 @@
 title: State calculation
 layout: default
 topic: Documentation
-order: 1
+topic_order: 3
+order: 4
 ---
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -34,9 +35,9 @@ order: 1
 
 <br>
 
-In Coral (and in Akka in general), actors can contain *state*, which is any variable (or multiple variables) that can be updated when a new event comes in. Variables are only visible by the actor in which the variable resides, and the variable can only be updated from within the actor, as a reaction on messages that were sent to the actor. 
+In Coral (and in Akka in general), actors can contain *state*, which is any variable (or multiple variables) that can be updated when a new event comes in. In Akka, these variables are only visible and changeable by the actor in which the variable resides, and the variable can only be updated as a reaction on messages that were sent to the actor.
 
-In Coral, this method of dealing with state is also available, but to facilitate state calculations with Spark and the event log, several other methods can be configured. These methods, and the relationships between them, are described on this page. 
+In Coral, there exists several methods to deal with state. To facilitate state calculations with Spark and the event log, several additional methods can be configured. These methods, and the relationships between them, are described on this page. 
 
 --------------------------------
 
@@ -50,20 +51,20 @@ There are two types of actors in Coral:
   As is clear from the example, the state of the threshold actor is not influenced by incoming JSON events. Its state is constant; its threshold value will always be 100, regardless of the events that come through. These type of actors can be very easily scaled because the definition of the actor is constant and no effort has to be made to recalculate or synchronize state between actor copies.
 
 - **Stateful actors**  
-  This type of actors do somehow change internal variables when events come in. In a typical actor system, this often takes the form of a "var" field, which is then updated based on the incoming message. This approach is fine and is also available in Coral, but it has several drawbacks related to scalability and resiliency. 
+  This type of actors do somehow change internal variables when events come in. In a typical actor system, this often takes the form of a `var` field, which is then updated based on the incoming message. This approach is fine and is also available in Coral, but it has several drawbacks related to scalability and resiliency. 
 
   For instance, if the actor crashes, the state is lost. This can be mitigated by using a persistent actor with event sourcing and snapshots, but even in this case it is still hard to distribute the state across multiple actors to increase the throughput of the system. It is also unclear how the states of different copies of the same actor relate to each other if they have received different events. 
 
-There are four different state functions available which can be turned on or off in the settings of a certain actor. These state functions are independent of each other and can be turned on or off per function.
+In Coral, state is handled through four different *state functions*, which are procedures that are executed depending on the settings of the specific actor. Each fo these state functions can be turned on or off independently. First, however, we continue to describe the problem of state in the Coral platform by describing several potential solutions to this problem.
 
 --------------------------------
 
 ### <a name="stateproblem"></a>State: The Problem
-To illustrate some of the potential problems that can arise when dealing with stateful actors in Coral, we show a couple of possible solutions to the state problem.
+To illustrate some of the potential problems that can arise when dealing with stateful actors in Coral, we first show a couple of possible solutions to the state problem.
 
 <br>
 
-#### Solution 1: Ignore the problem (<a href="img/state1.png" target="_blank">show diagram</a>)
+####  <a name="solution1"></a>Solution 1: Ignore the problem (<a href="img/state1.png" target="_blank">show diagram</a>)
 
 To start, let us pretend that there does not exist a problem, and we create a runtime on a machine, containing an actor that calculates the average of a certain JSON field. After a while, the load starts to increase, and more capacity is needed to handle the increased load. We can simply start up another runtime with the exact same configuration, and perform load balancing between the two runtimes. This means that the first machine sees only half of the messages, and the second machine sees the other half. 
 
@@ -72,10 +73,10 @@ Coral will not complain if you start two identical runtimes, but it might not gi
 There are several problems with this approach:
 
 - **Which average is right?**  
-Which average is the correct one? There exists inconsistent state between the two runtimes. You can also rely on the statistics of large numbers here and assume that in the long run, the two averages will converge to the average of the original values, on average. If you don't want to sound like a statistician, this explanation is better avoided with another state method.
+There now exists inconsistent state between the two runtimes. You can rely on the statistics of large numbers here and assume that in the long run, the two averages will converge to the average of the original values, on average. If you don't want to sound like a statistician, this explanation is better avoided with another state method.
 
 - **Reconciliation**  
-How can we reconcile the state of the two actors? Often, the average of two averages does not equal the average of the original input events, which we have not stored in this actor. For other types of state, such as neural networks, it might be completely unclear how to reconcile two states or it might simply be impossible.
+How can we reconcile the state of the two actors? It is often not possible to aggregate two aggregates and come to the same results as when the calculation was performed directly on the original input events. For some types of state, such as a neural network for example, it might be completely unclear how to reconcile two states or it might simply be impossible.
 
 - **Duplicate actions**  
 For instance, if a JSON object is sent to Kafka if a certain threshold is reached, two JSON objects will be sent because we have two copies of the runtime. It is not clear how to prevent duplicate actions in the case of duplicate runtimes.
@@ -84,7 +85,7 @@ For instance, if a JSON object is sent to Kafka if a certain threshold is reache
 
 #### Solution 2: One runtime, one machine (<a href="img/state2.png" target="_blank">show diagram</a>)
 
-A second solution is to always start a runtime on a single machine. This prevents inconsistencies in state between runtimes, but the effect is that the runtime cannot be scaled up beyond a single machine to handle larger loads. Also, if the runtime crashes, there is no live backup available to take over. This means that if a machine or a runtime crashes, it takes some time before a restarted copy is back online. In the meantime, no messages can be processed. This might or might not be a problem, depending on the specific use case and on the recovery time.
+A second solution is to always start a runtime on a single machine. This prevents inconsistencies in state between runtimes, but the effect is that the runtime cannot be scaled up beyond a single machine to handle larger loads. Also, if the runtime crashes, there is no live backup available to take over. This means that if a machine or a runtime crashes, it takes some time before a restarted copy is back online. In the meantime, no messages can be processed. This might or might not be a problem, depending on the specific use case and on the required recovery time.
 
 <br>
 
@@ -121,13 +122,35 @@ If it is a requirement to incorporate the latest messages in the state of an act
 
 --------------------------------
 
-As the previous examples show, there are a couple of different ways to deal with state in Coral actors. Any of the behaviours above can be defined with the combination of 4 different "state modules", which are functions which define how to update the state of a certain actor. These functions are *Local state calculation*, *Local batch state calculation*, *Spark state calculation* and *Log state calculation*. A Coral actor can implement a combination of these functions, or none of them, depending on the task of the actor. All 4 functions ultimately achieve the same thing: they update the state of an actor (which can be a single variable or multiple variables) after processing either a single event or a batch of events. This can be done locally, on a locally stored batch, or it can be performed in a Spark job. The Cassandra event log can also be queried to recalculate state.
+### The state functions
+
+As the previous examples show, there are a couple of different ways to deal with state in Coral actors. Any of the behaviours above can be defined with the combination of 1+4 different "state modules", which are functions which define how to update the state of a certain actor. These functions are: 
+
+1. (Trigger)
+2. Local state calculation (*calc-local*)  
+3. Local batch state calculation (*collect-local*)  
+4. Spark state calculation (*spark-batch*)  
+5. Log state calculation (*log-batch*)  
+
+The trigger function is not strictly a state function, but is mentioned here because it is always executed after every JSON object is received and just before any one of the state functions. 
+
+A Coral actor can implement a combination of the last four functions, or none of them, depending on the task of the actor. 
+
+All four state functions ultimately achieve the same thing: they update the state of an actor (which can be a single variable or multiple variables) after processing either a single event or a batch of events. This can be done locally, on a locally stored batch, or it can be performed in a Spark job. The Cassandra event log can also be queried to recalculate state.
 
 When an actor implements multiple ways to perform the same state update, it becomes possible to choose a method depending on the specific context of the actor or the specific runtime settings. For instance, if Spark is enabled, a Spark job can be started. If Spark is not available, the event log can still be queried directly to update state. If the event log is also not available, state updates can be performed on a local batch. If the local batch is turned off, ru-vars ([explained later](#ruvars)) can still be calculated.
 
+#### Trigger
+
+The first function, trigger, is not strictly a state function (hence the 1+4) because it does not modify any state. We mention it here because it is always executed after every JSON object, and the state functions are executed after it finishes, if they are turned on. The trigger function itself cannot be turned off and is always executed when a JSON object comes in. It contains the "scoring" part of the actor, or the code that is strictly functional/stateless. 
+
+For instance, when the actor is a ThresholdActor, the trigger checks whether the specified field is lower than a certain threshold, and when it is, it passes on the message.
+
+Coral actors never modify their internal state in the trigger function, but use the other four state functions to do this instead, if they implement these functions at all. It is thus safe to conclude that when no state functions are turned on in a runtime, the runtime can be considered fully functional/stateless and can be scaled up without any problems.
+
 ### <a name="localstate"></a>Local state calculation
 
-The most simple stateful Coral actor is an actor that keeps a local variable as state. For instance, in an actor that counts the number of incoming events, its state could look as follows:
+The first state function, local state calculation/calc-local, makes all changes to local, internal variables that a Coral actor maintains. For instance, in an actor that counts the number of incoming events, its state could look as follows:
 
 {% highlight scala %}
 var count: Int = 0
@@ -139,60 +162,83 @@ In the trigger method of the actor, the following code could be found:
 count += 1
 {% endhighlight %}
 
-This actor simply keeps a local variable that it updates on every trigger event. The drawback of this approach is that it is difficult to increase the throughput of a system which contains such an actor, since the state is located in a single actor. If there are too much messages coming in which the actor cannot handle (unlikely with such an easy calculation, but still), a large build-up of unprocessed messages will occur. When a copy of this actor is made, and each actor copy is sent a JSON event in turn ("round-robin routing"), the result will be that both actors keep a different count variable.
+This actor simply keeps a local counter variable that it increments on every trigger event. This approach works fine for runtimes which do not have to be scaled up and are perfectly capable to handle a reasonably low number of messages.
+
+The drawback of this approach is that it is difficult to increase the throughput of a system which contains such an actor, since the state is located in a single actor. If there are too much messages coming in which the actor cannot handle (unlikely with such an easy calculation, but still), a large build-up of unprocessed messages will occur. 
+
+When a copy of this actor is made (as seen in [Solution 1](#solution1)), and each actor copy is sent a JSON event in turn ("round-robin routing"), the end result will be that both actors keep a different count variable.
 
 It is trivial to reconcile two actors that both keep a count: simply summing the counts will suffice.
 However, the situation quickly becomes more complicated: when the state variables are two averages, or two medians, the action to reconcile them is not as obvious. When two actors keep more complicated state such as two neural networks, it might very well be impossible to define a function that merges the two states into a single one.
 
-An alternative is sending "gossip" messages between actor copies to reconcile the state after every event. The downside to this approach is that the resulting traffic can be so excessive that it completely eliminates any scaling benefits of using multiple actor copies. It might just have been easier to send all messages to all copies instead! In this case, other state settings might be better suited. For single-instance actors and simple state, however, the local state calculation approach can work fine.
+To reconcile the state between actors, a possibility is to send "gossip" messages between actor copies to reconcile the state after every event. The downside to this approach is that the resulting traffic can be so excessive that it completely eliminates any scaling benefits of using multiple actor copies. Because something like n(n - 1) messages need to be sent to fully synchronize state between all copies, it might just have been easier to send all messages to all copies instead! In this case, other state settings might be better suited. For single-instance actors and simple state, however, the local state calculation approach can work fine.
 
 --------------------------------
 
 ### <a name="localbatchstate"></a>Local batch state calculation
 
-Instead of updating the count variable in the previous example after every incoming event, a batch of events could also be saved, and the new state could be calculated after a certain amount of messages have been collected or a certain amount of time has passed. 
+Instead of updating the count variable in the previous example after every incoming event, a batch of events could also be saved, and the new state could be calculated after a certain amount of messages have been collected or a certain amount of time has passed. This mode is called local batch state calculation/collect-local.
 
 For instance, a Coral actor runs for an hour, collects 100 messages, and after this hour, the new state is obtained by performing a calculation on the batch of events. After recalculation of the state, the batch is cleared and the process starts over again. 
 
 In Coral, the function prototype that defines a local batch state calculation looks as follows:
 
 {% highlight scala %}
-type StateCalc = List[JObject] => Future[JObject]
+type CollectLocal = BatchList => Unit
 {% endhighlight %}
 
-which means that a local batch state calculation is a function that transforms a List of JSON objects into a JSON object somewhere in the future. The JSON object contains the state variables that can be set in the actor after the future is finished.
+where BatchList is defined to be 
+
+{% highlight scala %}
+type BatchList = ListBuffer[(Long, JObject)]
+{% endhighlight %}
+
+meaning that it is a list that contains the timestamp when each object was received, and the object itself.
+The CollectLocal definition returns Unit because the function has a side effect, i.e. updating the internal state.
 
 Note that it is possible to update local state after every event *and* at the same time use local batch state calculation. If both options are enabled, both methods will simply be executed. There is no additional logic required of the user to make this happen; the Coral framework will make sure that state is updated properly according to the specified combination of platform and actor settings.
 
-The local batch state calculation mode can still be used even if Spark or the event log are not available, since the actor simply collects events by itself. The disadvantage of this mode is that it is again hard to scale it up to multiple actors, since each actor copy collects its own specific set of events if round-robin routing is enabled. When sending all events to all actor copies, each actor receives all events ("broadcasting"), so the problem of diverging state does not exist. However, there is no effective scaling either because the number of actors increases proportionally with the number of messages to process. 
+The local batch state calculation mode can still be used even if Spark or the event log are not available, since the actor simply collects events by itself. The disadvantage of collect-local is that it is again hard to scale it up to multiple actors, since each actor copy collects its own specific set of events if round-robin routing is enabled. When sending all events to all actor copies, each actor receives all events ("broadcasting"), so the problem of diverging state does not exist. However, there is no effective scaling either because the number of actors increases proportionally with the number of messages to process. 
 
-### ru-vars and nr-vars
-The reason that this approach exists is that some calculations are impossible to perform if the original list of events is not available. A typical example of this is the median of a list of numbers. While it is possible to obtain a count by simply adding 1 to the old count, it is not possible to obtain a new median by altering the old median and somehow using the event that came in. In Coral, variables which can be updated without having the original list of input data are called "rolling update variables", or *ru-vars*. In contrast, a "non-rolling update variable", or *nru-var*, is a variable which cannot be calculated without the original input list. In practice, even though a variable could be expressed as a ru-var theoretically, it is sometimes infeasible to determine the algorithm to perform the rolling update. Therefore, it might be more practical to approach it as a nru-var instead. 
+### ru-vars and nru-vars
+The reason that collect-local exists is that some calculations are impossible to perform if the original list of events is not available. A typical example of this is the median of a list of numbers. While it is possible to obtain a count by simply adding 1 to the old count, it is not possible to obtain a new median by altering the old median and somehow using the event that came in. In Coral, variables which can be updated without having the original list of input data are called "rolling update variables", or *ru-vars*. In contrast, a "non-rolling update variable", or *nru-var*, is a variable which cannot be calculated without the original input list. 
+
+In practice, even though a variable could be expressed as a ru-var theoretically, it is sometimes infeasible to determine the algorithm to perform the rolling update. Therefore, it might be more practical to approach it as a nru-var instead. 
 
 Another reason that the local batch state calculation method exists is that the Coral platform does not assume that Spark and the event log are available and enabled. Even if any of these is unavailable or turned off, the platform must still be able to function.
 
 ### Sliding windows
 
-In Coral, it is also possible to use a *sliding window* in the case of local batch, Spark and event log state calculation. When a sliding window is used in any of these modes, the oldest input events are dropped and the newest input events are added in front of the batch, with a speed that depends on the configuration of the sliding window.
-
-A sliding window has a certain size, and a certain speed with which items are dropped and added to the list.
+In Coral, it is also possible to use a *sliding window* in the case of collect-local, spark-batch and log-batch. When a sliding window is used in any of these modes, the oldest input events are dropped and the newest input events are added in front of the batch, with a speed that depends on the configuration of the sliding window.
 
 A sliding window can be set up in two different modes:  
 
 - **Count**: Move the sliding window every \<x\> items.  
 - **Time**: Move the sliding window every \<x\> time units (months, days, hours, ...)
 
+A sliding window has a certain size, and a certain speed with which items are dropped and added to the list.
+
 For instance, when a sliding window with a size of 5 items and a count of 2 is defined, the actor will calculate its state based on an input list of 5 items, which moves after every 2 new items that come in:
 
-a b c d e  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c d e f g  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e f g h i  
+<table class="toplinks">
+	<tr>
+		<td>a</td><td>b</td><td>c</td><td>d</td><td>e</td><td></td><td></td><td></td><td></td>
+	</tr>
+	<tr>
+		<td></td><td></td><td>c</td><td>d</td><td>e</td><td>f</td><td>g</td><td></td><td></td>
+	</tr>
+	<tr>
+		<td></td><td></td><td></td><td></td><td>e</td><td>f</td><td>g</td><td>h</td><td>i</td>
+	</tr>
+</table>
+
+<br>
 
 The time mode does not update the window after a number of events but after a period of time, regardless of the number of events in the list. Spark and log state calculation also allow the use of a sliding window over the selection of items. 
 
 If a sliding window is used, all ru-vars must be treated as nru-vars. This is because it is not possible, for instance, to remove the oldest values from a sum of numbers if these old values are unknown.
 
-A sliding window with a count equal to the size of the sliding window is equivalent to not using a sliding window at all.
+A sliding window with a size or a time equal to the size of the slide parameter is equivalent to not using a sliding window at all.
 
 --------------------------------
 
@@ -322,8 +368,11 @@ Below, a couple of examples of state function definitions are given. Note that t
 #### Default setting
 
 {% highlight json %}
-"state": {
-  "calc-local": true
+{
+  ...,
+  "state": {
+    "calc-local": true
+  }
 }
 {% endhighlight %}
 
@@ -334,24 +383,30 @@ This is the default setting for all stateful Coral actors, so it is unnecessary 
 #### Purely functional actor
 
 {% highlight json %}
-"state": {
-  "calc-local": false,
-  "collect-local": false,
-  "spark-batch": false,
-  "log-batch": false
+{
+  ...,
+  "state": {
+    "calc-local": false,
+    "collect-local": false,
+    "spark-batch": false,
+    "log-batch": false
+  }
 }
 {% endhighlight %}
 
-In this example, a purely functional actor is defined. This is the default setting of all stateless Coral actors, so it is unnecessary to specify it in the runtime configuration of a stateless actor. If the actor is a stateful actor, this setting would not be sensible since the actor would not update its internal state with these settings.
+In this example, a purely functional actor is defined. This is the default setting of all stateless Coral actors, so it is unnecessary to specify it in the runtime configuration of a stateless actor. If the actor is a stateful actor, this setting would not be sensible since the actor would not update its internal state with these settings. In this case, Coral will return an error.
 
 <br>
 
 #### Local state and local batch state calculation
 
 {% highlight json %}
-"state": {
-  "calc-local": true,
-  "collect-local": true
+{
+  ...,
+  "state": {
+    "calc-local": true,
+    "collect-local": true
+  }
 }
 {% endhighlight %}
 
@@ -362,14 +417,18 @@ In this example, shortcut notation is used again, both calc-local and collect-lo
 #### Local state and local batch state calculation after every 10 events
 
 {% highlight json %}
-"state": {
-  "calc-local": true, 
-  "collect-local": {
-    "enabled": true,
-    "update": {
-      "event-count": 10
+{
+  ...,
+  "state": {
+    "calc-local": true, 
+    "collect-local": {
+      "enabled": true,
+      "update": {
+        "event-count": 10
+      }
     }
   }
+}
 {% endhighlight %}
 
 In this example, the extended notation is used, and calc-local and collect-local is enabled. For collect-local, an update interval of 10 events is used, meaning that after every 10 events that come in, the internal collect batch is cleared and the collection process starts over from the beginning. 
@@ -379,18 +438,22 @@ In this example, the extended notation is used, and calc-local and collect-local
 #### Spark batch calculation with time interval
 
 {% highlight json %}
-"state": {
-  "calc-local": false,
-  "spark-batch": {
-    "enabled": true,
-    "update": {
-      "duration": {
-        "hours": 1,
-        "minutes": 10,
-        "seconds": 20
+{
+  ...,
+  "state": {
+    "calc-local": false,
+    "spark-batch": {
+      "enabled": true,
+      "update": {
+        "duration": {
+          "hours": 1,
+          "minutes": 10,
+          "seconds": 20
+        }
       }
     }
   }
+}
 {% endhighlight %}
 
 In this example, a purely distributed Spark batch calculated actor is created which updates its state after every 1 hours, 10 minutes and 20 seconds.
@@ -400,14 +463,17 @@ In this example, a purely distributed Spark batch calculated actor is created wh
 #### Log batch calculation with local updates
 
 {% highlight json %}
-"state": {
-  "calc-local": true,
-  "log-batch": {
-    "enabled": true,
-    "update": {
-      "sliding-window": {
-        "size": 10,
-        "slide": 2
+{
+  ...,
+  "state": {
+    "calc-local": true,
+    "log-batch": {
+      "enabled": true,
+      "update": {
+        "sliding-window": {
+          "size": 10,
+          "slide": 2
+        }
       }
     }
   }

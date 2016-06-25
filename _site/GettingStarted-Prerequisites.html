@@ -177,10 +177,10 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-StateCalculation.html">
+                    	    <a href="/Documentation-ActorReference.html">
 	                        	
-                	        			State calculation
-                    	    	
+        	                			Actor Reference
+            	            		
 							</a>
     	                    </div>
         	                </div>
@@ -201,10 +201,46 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-ActorReference.html">
+                    	    <a href="/Documentation-HandlingAndForwarding.html">
 	                        	
-        	                			Actor Reference
-            	            		
+                	        			Handling and forwarding
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-EventLog.html">
+	                        	
+                	        			The event log
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-StateCalculation.html">
+	                        	
+                	        			State calculation
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-ScalingOut.html">
+	                        	
+                	        			Scaling out
+                    	    	
 							</a>
     	                    </div>
         	                </div>
@@ -244,6 +280,10 @@
                 	</div>
 	                
     	            
+        	            
+                	
+        	            
+                	
         	            
                 	
         	            
@@ -345,12 +385,18 @@
   <li><strong>API knowledge</strong><br />
 Basic knowledge of RESTful interfaces and JSON. Coral is controlled through a RESTful HTTP interface. At this moment, there is no visual interface yet, so the application can only be controlled through its HTTP API.</li>
   <li><strong>Cassandra</strong><br />
-A running Cassandra instance. To download the latest version of Cassandra, visit <a href="http://cassandra.apache.org">http://cassandra.apache.org</a>. We have not tested running Coral with older versions of Cassandra. For this reason, the latest version is recommended.</li>
+A running Cassandra instance. To download the latest version of Cassandra, visit <a href="http://cassandra.apache.org">http://cassandra.apache.org</a>.</li>
   <li><strong>Kafka</strong><br />
-A running Kafka instance. To download the latest version of Kafka, visit the <a href="http://kafka.apache.org">website</a>. We have not tested running Coral with older versions of Kafka. For this reason, the latest version is recommended.</li>
+A running Kafka instance. To download the latest version of Kafka, visit the <a href="http://kafka.apache.org">website</a>.</li>
+  <li><strong>Spark</strong><br />
+A running Spark instance is needed if you want to use Spark for state calculation. To download the latest version of Spark, visit <a href="http://spark.apache.org">http://spark.apache.org</a>.</li>
+  <li><strong>ElasticSearch</strong><br />
+A running instance of ElasticSearch is needed if you want to search JSON events from the event log. To download the latest version of ElasticSearch, visit <a href="https://www.elastic.co">https://www.elastic.co</a>.</li>
   <li><strong>HTTP client</strong><br />
 An HTTP client. There are a lot of different ways to issue commands to Coral, all of which use HTTP. A convenient way to send API calls to Coral is with <a href="http://www.getpostman.com">Postman</a>, a browser plugin for <a href="https://www.google.com/chrome">Google Chrome</a>. It is also possible to use <code>curl</code>, a bash command line tool, to enter the commands. It is also possible to write a <a href="https://www.python.org">Python</a> script to enter the commands. A python or bash script has the advantage that combinations of commands can be stored and later executed. So pick your favorite HTTP client!</li>
 </ul>
+
+<p>We have not tested Coral against old versions of these tools, for this reason it is recommended to download the latest version of these programs.</p>
 
 <p>If you are compiling from source and you want to obtain the latest version from GitHub, the following additional prerequisites exist:</p>
 

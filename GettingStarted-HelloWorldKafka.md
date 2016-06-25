@@ -2,6 +2,7 @@
 title: Hello World with Kafka
 layout: default
 topic: Getting started
+topic_order: 2
 order: 4
 ---
 <!--

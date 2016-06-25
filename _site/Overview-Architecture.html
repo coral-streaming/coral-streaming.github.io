@@ -177,10 +177,10 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-StateCalculation.html">
+                    	    <a href="/Documentation-ActorReference.html">
 	                        	
-                	        			State calculation
-                    	    	
+        	                			Actor Reference
+            	            		
 							</a>
     	                    </div>
         	                </div>
@@ -201,10 +201,46 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-ActorReference.html">
+                    	    <a href="/Documentation-HandlingAndForwarding.html">
 	                        	
-        	                			Actor Reference
-            	            		
+                	        			Handling and forwarding
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-EventLog.html">
+	                        	
+                	        			The event log
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-StateCalculation.html">
+	                        	
+                	        			State calculation
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-ScalingOut.html">
+	                        	
+                	        			Scaling out
+                    	    	
 							</a>
     	                    </div>
         	                </div>
@@ -244,6 +280,10 @@
                 	</div>
 	                
     	            
+        	            
+                	
+        	            
+                	
         	            
                 	
         	            
@@ -364,7 +404,7 @@
 
 <p>Coral is a platform that enables real-time, streaming/event-driven analytics. In short, Coral transforms events coming from an event bus (at this time only Kafka) into other events which can be sent to Kafka or other API’s.</p>
 
-<p>On Coral, users define <em>runtimes</em>. A <em>runtime</em> is a single configuration which is created by a user and performs a specific transformation to the input data. Multiple <em>runtimes</em> can run at the same time on the platform. Each of these runtimes processes events according to its runtime definition which was provided in the JSON constructor of the runtime. A typical runtime consists of multiple different <em>actors</em> which each perform a single task on the events that are sent to it, and outputs a transformed event when triggered.</p>
+<p>On Coral, users define <em>runtimes</em>. A <em>runtime</em> is a single configuration which is created by a user and performs a specific transformation to the input data. Multiple runtimes can run at the same time on the platform. Each of these runtimes process events according to their runtime definition. A typical runtime consists of multiple different <em>actors</em> which each perform a single task on the events that are sent to it, and outputs a transformed event when triggered.</p>
 
 <p>A global overview of the architecture of Coral is shown in the picture below.</p>
 
@@ -382,7 +422,7 @@
 
 <ul>
   <li><strong>Responsiveness</strong><br />
-Requests are handled in a couple of milliseconds. Of course, the exact time depends on the specific request.</li>
+Requests are typically handled in a couple of milliseconds, and some operations only take in the order of nanoseconds to complete. Of course, the exact time depends on the specific request.</li>
   <li><strong>Resiliency</strong><br />
 The system is designed for failure and can restore after a crash.</li>
   <li><strong>Elasticity</strong><br />
@@ -403,8 +443,8 @@ machine can take over the operation of the failed one. To achieve this, all even
 Thanks to <a href="http://www.akka.io">Akka</a>, <a href="http://cassandra.apache.org">Cassandra</a> and <a href="http://kafka.apache.org">Kafka</a>, which are all distributed, linearly scalable systems, Coral is linearly scalable as well. Each node is identical to any other, and new nodes can be added to the system through the RESTful interface.</li>
   <li><strong>Security</strong><br />
 Coral uses Basic Authentication to authenticate users. Each individual API call must be executed with a Basic Authentication header. Depending on the authentication mode chosen (see <a href="#security">Security</a>), the user name and password will be checked against a stored value. If authenticated, an authorization check will be performed on the combination of the used method (GET, POST, etc), URL and user.</li>
-  <li><strong>Millisecond-range response times</strong><br />
-Thanks to the use of <a href="http://www.spray.io">Spray</a> and the Akka actor framework, most requests can be handled within milliseconds. Of course, this depends on the specific task that needs to be executed.</li>
+  <li><strong>Sub-millisecond-range response times</strong><br />
+Thanks to the use of <a href="http://www.spray.io">Spray</a> and the Akka actor framework, most requests can be handled within a few milliseconds or even nanoseconds. Of course, this depends on the specific task that needs to be executed.</li>
   <li><strong>Functional programming</strong><br />
 By applying functional programming techniques, we hope to reduce the number of bugs in code. Most of the code is completely stateless, except for variables inside of actors. Thus far, it has worked out pretty well!</li>
 </ul>
@@ -436,17 +476,17 @@ Each request more or less follows the same steps:</p>
 <ul>
   <li><strong>Platform</strong><br />
 The platform itself has settings and statistics which can be obtained through the /api/platform endpoint.
-Platform statistics contains information about the number of machines currently in the cluster, the number of runtimes running on it, and other information.</li>
+Platform statistics contains information about the number of machines currently in the cluster, the number of runtimes running on it, and other information about the Coral cluster as a whole.</li>
   <li><strong>Runtimes</strong><br />
-Runtimes are the most important resource that can be controlled by the API. Runtimes can be created with a POST operation and started and stopped with a PATCH operation.</li>
+Runtimes are the most important resource that can be controlled by the API. Runtimes can be created with a POST operation and started and stopped with a PATCH operation. Statistics on runtimes can be obtained by a GET operation on the endpoint of the runtime.</li>
   <li><strong>Actors</strong><br />
-Interaction with individual actors that are present in runtimes is possible. This way statistics can be obtained for specific actors, or individual (debug) messages can be posted to an actor. In Coral, each actor in a runtime has its own standard endpoint.</li>
+Interaction with individual actors that are present in runtimes is possible. This way statistics can be obtained for specific actors, or individual (debug) messages can be posted to an actor. In Coral, each actor in a runtime gets its own endpoint.</li>
   <li><strong>Users</strong><br />
 If Coral’s internal authentication mechanism is used, users can be added and granted permissions to specific runtimes and API calls.</li>
   <li><strong>Permissions</strong><br />
-Access to individual resources and combinations of users, verbs (POST, PATCH, etc) and endpoints can be controlled by permission objects.</li>
+Access to individual endpoints can be controlled with the permission API. Individual API calls can be allowed or denied for specific users or HTTP verbs.</li>
   <li><strong>Projects</strong><br />
-Currently not present, but in the future, projects could be created in which users can design runtimes.</li>
+Currently not present, but in the future, projects could be created in which users can create runtime definitions, which can then be started as runtimes.</li>
 </ul>
 
 <p>The full list of endpoints is given in the <a href="Documentation-ApiReference.html">API Reference</a>.</p>
@@ -491,11 +531,11 @@ The advantage of JSON is that objects can be specfied and parsed at runtime. Alt
 The JSON format is completely serializable, meaning that a string representation of each JSON object can created without problems, which is then sent over a TCP connection between nodes, and which is then decoded again in a JSON object.</li>
 </ul>
 
-<p>A Coral actor is not aware of all sources from which it receives JSON objects, nor is it aware of all targets to which the output of its calculation must be sent. This is handled by the Coral platform. The only thing an actor knows is which operation to perform when it is “triggered” by an incoming JSON object.</p>
+<p>A Coral actor does not need to be aware of all sources from which it receives JSON objects, nor does it need to be aware of all targets to which the output of its calculation must be sent. This is handled by the Coral platform. The only thing an actor knows is which operation to perform when it is “triggered” by an incoming JSON object.</p>
 
 <p>Nodes in the cluster communicate with each other through Akka’s <a href="http://doc.akka.io/docs/akka/2.4.1/common/cluster.html#membership">Gossip</a> protocol.</p>
 
-<p>Since each runtime is assigned in its completeness to a single node, excessive TCP traffic caused by messages from Kafka are prevented. The only messages that cross node boundaries are API requests which are redirected to the proper machines.</p>
+<p>Since each runtime is assigned in its completeness to a single node, excessive TCP traffic caused by messages from Kafka are prevented, but if messages are delivered to the wrong node, Coral will redirect them to the right one. The only messages that typically cross node boundaries, however, are API requests which are redirected to the proper machines.</p>
 
 <hr />
 

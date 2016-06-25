@@ -2,7 +2,8 @@
 title: API Reference
 layout: default
 topic: Documentation
-order: 1
+topic_order: 3
+order: 2
 ---
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more

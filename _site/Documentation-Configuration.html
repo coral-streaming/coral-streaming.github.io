@@ -177,10 +177,10 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-StateCalculation.html">
+                    	    <a href="/Documentation-ActorReference.html">
 	                        	
-                	        			State calculation
-                    	    	
+        	                			Actor Reference
+            	            		
 							</a>
     	                    </div>
         	                </div>
@@ -201,10 +201,46 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-ActorReference.html">
+                    	    <a href="/Documentation-HandlingAndForwarding.html">
 	                        	
-        	                			Actor Reference
-            	            		
+                	        			Handling and forwarding
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-EventLog.html">
+	                        	
+                	        			The event log
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-StateCalculation.html">
+	                        	
+                	        			State calculation
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-ScalingOut.html">
+	                        	
+                	        			Scaling out
+                    	    	
 							</a>
     	                    </div>
         	                </div>
@@ -244,6 +280,10 @@
                 	</div>
 	                
     	            
+        	            
+                	
+        	            
+                	
         	            
                 	
         	            
@@ -363,8 +403,32 @@ If these options are not overriden by manually specifying a configuration file o
     <span class="err">snapshot-store.plugin</span> <span class="err">=</span> <span class="s2">&quot;cassandra-snapshot-store&quot;</span>
   <span class="p">}</span>
 
+  <span class="err">//</span> <span class="err">enables</span> <span class="err">kryo</span> <span class="err">settings</span> <span class="err">customization</span>
+  <span class="err">extensions</span> <span class="err">=</span> <span class="p">[</span><span class="s2">&quot;com.romix.akka.serialization.kryo.KryoSerializationExtension$&quot;</span><span class="p">]</span>
+
   <span class="err">actor</span> <span class="p">{</span>
     <span class="err">provider</span> <span class="err">=</span> <span class="nt">&quot;akka.cluster.ClusterActorRefProvider&quot;</span>
+
+    <span class="err">serializers</span> <span class="p">{</span>
+      <span class="err">//</span> <span class="err">kryo</span> <span class="err">is</span> <span class="err">much</span> <span class="err">performant</span> <span class="err">than</span> <span class="err">default</span> <span class="err">java</span> <span class="err">serializer,</span> <span class="err">it</span> <span class="err">produces</span>
+      <span class="err">//</span> <span class="err">smaller</span> <span class="err">output</span> <span class="err">stream</span> <span class="err">in</span> <span class="err">shorter</span> <span class="err">time</span>
+      <span class="err">//</span> <span class="err">since</span> <span class="err">Akka</span> <span class="err">2.4.x,</span> <span class="err">it</span> <span class="err">deprecates</span> <span class="err">the</span> <span class="err">default</span> <span class="err">Java</span> <span class="err">serializer</span> <span class="err">as</span> <span class="err">not</span>
+      <span class="err">//</span> <span class="err">optimal</span> <span class="err">for</span> <span class="err">the</span> <span class="err">production</span> <span class="err">use</span>
+      <span class="err">kryo</span> <span class="err">=</span> <span class="nt">&quot;com.romix.akka.serialization.kryo.KryoSerializer&quot;</span>
+    <span class="p">}</span>
+
+    <span class="err">serialization-bindings</span> <span class="p">{</span>
+      <span class="nt">&quot;java.io.Serializable&quot;</span> <span class="err">=</span> <span class="err">kryo</span>
+      <span class="s2">&quot;scala.collection.immutable.List&quot;</span> <span class="err">=</span> <span class="err">kryo</span>
+    <span class="p">}</span>
+
+    <span class="err">#</span> <span class="err">configuration</span> <span class="err">of</span> <span class="err">the</span> <span class="err">serialization</span> <span class="err">library</span>
+    <span class="err">kryo</span> <span class="p">{</span>
+      <span class="err">post-serialization-transformations</span> <span class="err">=</span> <span class="nt">&quot;off&quot;</span>
+      <span class="err">idstrategy</span> <span class="err">=</span> <span class="s2">&quot;default&quot;</span>
+      <span class="err">kryo-trace</span> <span class="err">=</span> <span class="kc">false</span>
+      <span class="err">implicit-registration-logging</span> <span class="err">=</span> <span class="kc">false</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="err">remote</span> <span class="p">{</span>
@@ -383,6 +447,11 @@ If these options are not overriden by manually specifying a configuration file o
       <span class="err">enabled</span> <span class="err">=</span> <span class="err">off</span>
     <span class="p">}</span>
   <span class="err">}</span>
+
+  <span class="err">event-count-update</span> <span class="p">{</span>
+    <span class="err">mode</span> <span class="err">=</span> <span class="nt">&quot;time&quot;</span>
+    <span class="err">granularity</span> <span class="err">=</span> <span class="mi">1000</span>
+  <span class="p">}</span>
 <span class="err">}</span>
 
 <span class="err">spray.servlet.boot-class</span> <span class="err">=</span> <span class="s2">&quot;io.coral.api.Boot&quot;</span>
@@ -424,29 +493,54 @@ If these options are not overriden by manually specifying a configuration file o
   <span class="p">}</span>
 <span class="err">}</span>
 
+<span class="err">//</span> <span class="err">The</span> <span class="err">actor</span> <span class="err">factories</span> <span class="err">to</span> <span class="err">get</span> <span class="err">actor</span> <span class="err">definitions</span> <span class="err">from.</span>
+<span class="err">//</span> <span class="err">When</span> <span class="err">supplying</span> <span class="err">custom</span> <span class="err">actors,</span> <span class="err">an</span> <span class="err">additional</span> <span class="err">actor</span>
+<span class="err">//</span> <span class="err">factory</span> <span class="err">should</span> <span class="err">be</span> <span class="err">supplied</span> <span class="err">here.</span>
 <span class="err">injections.actorPropFactories</span> <span class="err">=</span> <span class="p">[</span>
   <span class="s2">&quot;io.coral.actors.DefaultActorPropFactory&quot;</span>
 <span class="p">]</span>
 
 <span class="err">coral</span> <span class="p">{</span>
+  <span class="err">//</span> <span class="err">The</span> <span class="err">log</span> <span class="err">level</span> <span class="err">of</span> <span class="err">the</span> <span class="err">application</span>
+  <span class="err">//</span> <span class="err">Can</span> <span class="err">be</span> <span class="err">INFO,</span> <span class="err">WARN</span> <span class="err">or</span> <span class="err">ERROR</span>
   <span class="err">log-level</span> <span class="err">=</span> <span class="err">INFO</span>
 
+  <span class="err">//</span> <span class="err">Whether</span> <span class="err">runtimes</span> <span class="err">should</span> <span class="err">be</span> <span class="err">read</span> <span class="err">and</span> <span class="err">started</span>
+  <span class="err">//</span> <span class="err">from</span> <span class="err">the</span> <span class="err">runtime</span> <span class="err">table</span> <span class="err">on</span> <span class="err">startup</span>
+  <span class="err">start-runtimes-in-table</span> <span class="err">=</span> <span class="err">false</span>
+
   <span class="err">api</span> <span class="err">{</span>
+    <span class="err">//</span> <span class="err">The</span> <span class="err">Spray.io</span> <span class="err">HTTP</span> <span class="err">interface</span>
+    <span class="err">//</span> <span class="err">0.0.0.0</span> <span class="err">means</span> <span class="err">that</span> <span class="err">Coral</span> <span class="err">will</span> <span class="err">listen</span> <span class="err">to</span> <span class="err">all</span> <span class="err">interfaces</span>
     <span class="err">interface</span> <span class="err">=</span> <span class="nt">&quot;0.0.0.0&quot;</span>
+    <span class="err">//</span> <span class="err">The</span> <span class="err">HTTP</span> <span class="err">port</span> <span class="err">on</span> <span class="err">which</span> <span class="err">the</span> <span class="err">RESTful</span> <span class="err">API</span> <span class="err">will</span> <span class="err">communicate</span>
     <span class="err">port</span> <span class="err">=</span> <span class="mi">8000</span>
   <span class="p">}</span>
 
   <span class="err">akka</span> <span class="p">{</span>
+    <span class="err">//</span> <span class="err">The</span> <span class="err">interface</span> <span class="err">to</span> <span class="err">which</span> <span class="err">akka</span> <span class="err">actors</span> <span class="err">will</span> <span class="err">communicate</span>
     <span class="err">hostname:</span> <span class="nt">&quot;127.0.0.1&quot;</span><span class="p">,</span>
-    <span class="err">port:</span> <span class="err">2555</span>
+    <span class="err">//</span> <span class="err">The</span> <span class="err">port</span> <span class="err">on</span> <span class="err">which</span> <span class="err">akka</span> <span class="err">actors</span> <span class="err">will</span> <span class="err">communicate</span>
+    <span class="err">port:</span> <span class="err">2551</span>
   <span class="p">}</span>
 
+  <span class="err">//</span> <span class="err">The</span> <span class="err">default</span> <span class="err">distribution</span> <span class="err">mode</span> <span class="err">for</span> <span class="err">new</span> <span class="err">runtimes.</span>
+  <span class="err">//</span> <span class="err">Round-robin</span> <span class="err">means</span> <span class="err">that</span> <span class="err">each</span> <span class="err">machine</span> <span class="err">is</span> <span class="err">assigned</span>
+  <span class="err">//</span> <span class="err">a</span> <span class="err">new</span> <span class="err">runtime</span> <span class="err">in</span> <span class="err">turn.</span>
   <span class="err">distributor</span> <span class="p">{</span>
     <span class="err">mode</span> <span class="err">=</span> <span class="nt">&quot;round-robin&quot;</span>
   <span class="p">}</span>
 
   <span class="err">authentication</span> <span class="p">{</span>
-    <span class="err">mode</span> <span class="err">=</span> <span class="nt">&quot;coral&quot;</span>
+    <span class="err">//</span> <span class="err">Can</span> <span class="err">be</span> <span class="nt">&quot;coral&quot;</span><span class="p">,</span> <span class="nt">&quot;accept-all&quot;</span><span class="p">,</span> <span class="nt">&quot;deny-all&quot;</span> <span class="err">or</span> <span class="s2">&quot;ldap&quot;</span><span class="err">.</span>
+    <span class="err">//</span> <span class="err">LDAP</span> <span class="err">authentication</span> <span class="err">currently</span> <span class="err">not</span> <span class="err">functional.</span>
+    <span class="err">mode</span> <span class="err">=</span> <span class="s2">&quot;coral&quot;</span>
+    <span class="err">//</span> <span class="err">Whether</span> <span class="err">to</span> <span class="err">cache</span> <span class="err">runtimes</span><span class="p">,</span> <span class="err">users</span> <span class="err">and</span> <span class="err">permissions</span> <span class="err">in</span> <span class="err">memory</span>
+    <span class="err">//</span> <span class="err">for</span> <span class="err">faster</span> <span class="err">retrieval</span> <span class="err">through</span> <span class="err">the</span> <span class="err">API.</span> <span class="err">Advantage</span> <span class="err">of</span> <span class="err">this</span> <span class="err">is</span>
+    <span class="err">//</span> <span class="err">that</span> <span class="err">Cassandra</span> <span class="err">does</span> <span class="err">not</span> <span class="err">need</span> <span class="err">to</span> <span class="err">be</span> <span class="err">queried</span> <span class="err">after</span> <span class="err">every</span> <span class="err">REST</span>
+    <span class="err">//</span> <span class="err">call.</span> <span class="err">Disadvantage</span> <span class="err">is</span> <span class="err">that</span> <span class="err">data</span> <span class="err">can</span> <span class="err">sometimes</span> <span class="err">be</span> <span class="err">stale</span> <span class="err">in</span>
+    <span class="err">//</span> <span class="err">the</span> <span class="err">cached</span> <span class="err">tables.</span>
+    <span class="err">cache</span> <span class="err">=</span> <span class="err">true</span>
   <span class="p">}</span>
 
   <span class="err">cassandra</span> <span class="p">{</span>
@@ -460,19 +554,79 @@ If these options are not overriden by manually specifying a configuration file o
       <span class="err">keyspace-autocreate</span> <span class="err">=</span> <span class="err">$</span><span class="p">{</span><span class="err">coral.cassandra.keyspace-autocreate</span><span class="p">}</span>
     <span class="err">}</span>
 
-    <span class="err">contact-points</span> <span class="err">=</span> <span class="p">[</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
+    <span class="err">//</span> <span class="err">The</span> <span class="err">version</span> <span class="err">of</span> <span class="err">Cassandra</span> <span class="err">that</span> <span class="err">is</span> <span class="err">connected</span> <span class="err">to.</span>
+    <span class="err">//</span> <span class="err">This</span> <span class="err">impacts</span> <span class="err">certain</span> <span class="err">queries</span> <span class="err">which</span> <span class="err">depend</span> <span class="err">on</span> <span class="err">the</span>
+    <span class="err">//</span> <span class="err">structure</span> <span class="err">of</span> <span class="err">system</span> <span class="err">tables.</span>
+    <span class="err">version</span> <span class="err">=</span> <span class="mi">2</span>
+    <span class="err">contact-points</span> <span class="err">=</span> <span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span>
     <span class="err">port</span> <span class="err">=</span> <span class="mi">9042</span>
+
+    <span class="err">//</span> <span class="err">The</span> <span class="err">name</span> <span class="err">of</span> <span class="err">tables</span> <span class="err">Coral</span> <span class="err">uses</span> <span class="err">internally</span>
+    <span class="err">//</span> <span class="err">These</span> <span class="err">tables</span> <span class="err">cannot</span> <span class="err">have</span> <span class="err">conflicting</span> <span class="err">names</span>
     <span class="err">keyspace</span> <span class="err">=</span> <span class="s2">&quot;coral&quot;</span>
     <span class="err">user-table</span> <span class="err">=</span> <span class="s2">&quot;users&quot;</span>
     <span class="err">runtime-table</span> <span class="err">=</span> <span class="s2">&quot;runtimes&quot;</span>
     <span class="err">authorize-table</span> <span class="err">=</span> <span class="s2">&quot;auth&quot;</span>
-    <span class="err">max-result-size</span> <span class="err">=</span> <span class="mi">50000</span>
-    <span class="err">user</span> <span class="err">=</span> <span class="s2">&quot;neo&quot;</span>
-    <span class="err">password</span> <span class="err">=</span> <span class="s2">&quot;thematrix&quot;</span>
+    <span class="err">copies-table</span> <span class="err">=</span> <span class="s2">&quot;copies&quot;</span>
+
+    <span class="err">//</span> <span class="err">Whether</span> <span class="err">the</span> <span class="err">Coral</span> <span class="err">keyspace</span> <span class="err">will</span> <span class="err">be</span> <span class="err">autocreated</span>
+    <span class="err">//</span> <span class="err">if</span> <span class="err">it</span> <span class="err">is</span> <span class="err">not</span> <span class="err">found</span>
     <span class="err">keyspace-autocreate</span> <span class="err">=</span> <span class="kc">true</span>
+
+    <span class="err">//</span> <span class="err">The</span> <span class="err">maximum</span> <span class="err">number</span> <span class="err">of</span> <span class="err">results</span> <span class="err">to</span>
+    <span class="err">//</span> <span class="err">return</span> <span class="err">from</span> <span class="err">a</span> <span class="err">select</span> <span class="err">query</span>
+    <span class="err">max-result-size</span> <span class="err">=</span> <span class="mi">50000</span>
+
+    <span class="err">user</span> <span class="err">=</span> <span class="s2">&quot;coral&quot;</span>
+    <span class="err">password</span> <span class="err">=</span> <span class="s2">&quot;coral&quot;</span>
+
+    <span class="err">event-log</span> <span class="p">{</span>
+      <span class="err">//</span> <span class="err">Whether</span> <span class="err">event</span> <span class="err">logging</span> <span class="err">is</span> <span class="err">enabled</span> <span class="err">in</span> <span class="err">the</span> <span class="err">application</span> <span class="err">or</span> <span class="err">not</span>
+      <span class="err">enabled</span> <span class="err">=</span> <span class="err">true</span>
+
+      <span class="err">//</span> <span class="err">The</span> <span class="err">base</span> <span class="err">name</span> <span class="err">of</span> <span class="err">the</span> <span class="err">eventlog</span> <span class="err">table.</span> <span class="err">Will</span> <span class="err">be</span> <span class="err">appended</span> 
+      <span class="err">//</span> <span class="err">with</span> <span class="err">year</span> <span class="err">and</span> <span class="err">month.</span> <span class="err">For</span> <span class="err">example,</span> <span class="err">if</span> <span class="err">it</span> <span class="err">is</span> <span class="err">february</span> <span class="err">2016</span> 
+      <span class="err">//</span> <span class="err">today,</span> <span class="err">events</span> <span class="err">will</span> <span class="err">be</span> <span class="err">written</span> <span class="err">to</span> <span class="err">table</span> <span class="nt">&quot;eventlogtest201602&quot;</span><span class="err">.</span>
+      <span class="err">table</span> <span class="err">=</span> <span class="s2">&quot;eventlogtest&quot;</span>
+
+      <span class="err">integrated-index</span> <span class="p">{</span>
+        <span class="err">//</span> <span class="err">Whether</span> <span class="err">or</span> <span class="err">not</span> <span class="err">the</span> <span class="err">integrated</span> <span class="err">index</span> <span class="err">is</span> <span class="err">enabled.</span> <span class="err">If</span> 
+        <span class="err">//</span> <span class="err">turned</span> <span class="err">on,</span> <span class="err">and</span> <span class="err">DSE</span> <span class="err">Max</span> <span class="err">is</span> <span class="err">used,</span> <span class="err">it</span> <span class="err">will</span> <span class="err">fill</span> <span class="err">the</span> 
+        <span class="err">//</span> <span class="err">column</span> <span class="nt">&quot;fsjon&quot;</span> <span class="err">in</span> <span class="err">the</span> <span class="err">eventlog</span> <span class="err">tables</span> <span class="err">with</span> <span class="err">the</span> 
+        <span class="err">//</span> <span class="err">transformed</span> <span class="err">JSON</span> <span class="err">(See</span> <span class="err">EventLogHandler).</span>
+        <span class="err">enabled</span> <span class="err">=</span> <span class="kc">true</span>
+      <span class="p">}</span>
+
+      <span class="err">elasticsearch-index</span> <span class="p">{</span>
+        <span class="err">//</span> <span class="err">Whether</span> <span class="err">or</span> <span class="err">not</span> <span class="err">the</span> <span class="err">external</span> <span class="err">elasticsearch</span> <span class="err">index</span> <span class="err">is</span> <span class="err">enabled.</span>
+        <span class="err">//</span> <span class="err">This</span> <span class="err">is</span> <span class="err">independent</span> <span class="err">of</span> <span class="err">the</span> <span class="err">integrated</span> <span class="err">index</span> <span class="err">since</span> <span class="err">it</span> <span class="err">can</span> <span class="err">be</span> <span class="err">useful</span>
+        <span class="err">//</span> <span class="err">to</span> <span class="err">turn</span> <span class="err">them</span> <span class="err">both</span> <span class="err">on.</span> <span class="err">See</span> <span class="err">ElasticSearchIndexHandler.</span>
+        <span class="err">enabled</span> <span class="err">=</span> <span class="err">true</span>
+        <span class="err">seed-nodes</span> <span class="err">=</span> <span class="err">[</span> <span class="nt">&quot;192.168.100.101&quot;</span> <span class="err">]</span>
+        <span class="err">port</span> <span class="err">=</span> <span class="mi">9200</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
   <span class="err">}</span>
 
+  <span class="err">spark</span> <span class="p">{</span>
+    <span class="err">//</span> <span class="err">Whether</span> <span class="err">Spark</span> <span class="err">is</span> <span class="err">enabled</span> <span class="err">for</span> <span class="err">state</span> <span class="err">recalculations.</span>
+    <span class="err">//</span> <span class="err">This</span> <span class="err">can</span> <span class="err">be</span> <span class="err">an</span> <span class="err">integrated</span> <span class="err">Spark</span> <span class="err">(as</span> <span class="err">in</span> <span class="err">DSE</span> <span class="err">Max),</span> <span class="err">or</span> <span class="err">it</span> <span class="err">can</span> <span class="err">be</span>
+    <span class="err">//</span> <span class="err">a</span> <span class="err">separate</span> <span class="err">spark</span> <span class="err">instance.</span> <span class="err">We</span> <span class="err">cannot</span> <span class="err">assume</span> <span class="err">that</span> <span class="err">DSE</span> <span class="err">Max</span> <span class="err">is</span> <span class="err">used</span>
+    <span class="err">//</span> <span class="err">so</span> <span class="err">it</span> <span class="err">must</span> <span class="err">work</span> <span class="err">on</span> <span class="err">a</span> <span class="err">separate</span> <span class="err">Spark</span> <span class="err">instance/cluster</span> <span class="err">as</span> <span class="err">well.</span>
+    <span class="err">enabled</span> <span class="err">=</span> <span class="err">true</span>
+    <span class="err">seed-nodes</span> <span class="err">=</span> <span class="err">[</span> <span class="nt">&quot;192.168.100.101&quot;</span> <span class="err">]</span>
+    <span class="err">port</span> <span class="err">=</span> <span class="mi">7077</span>
+
+    <span class="err">//</span> <span class="err">Whether</span> <span class="err">multiple</span> <span class="err">Spark</span> <span class="err">contexts</span> <span class="err">should</span> <span class="err">be</span> <span class="err">allowed</span>
+    <span class="err">allow-multiple-contexts</span> <span class="err">=</span> <span class="kc">true</span>
+  <span class="p">}</span>
+
   <span class="err">cluster</span> <span class="p">{</span>
+    <span class="err">//</span> <span class="err">Whether</span> <span class="err">the</span> <span class="err">cluster</span> <span class="err">capabilities</span> <span class="err">of</span> <span class="err">Coral</span> <span class="err">are</span> <span class="err">enabled.</span>
+    <span class="err">//</span> <span class="err">Coral</span> <span class="err">can</span> <span class="err">also</span> <span class="err">be</span> <span class="err">run</span> <span class="err">in</span> <span class="err">standalone</span> <span class="err">mode,</span> <span class="err">with</span> <span class="err">the</span> <span class="nt">&quot;-nc&quot;</span> <span class="err">boot</span> <span class="err">option.</span>
+    <span class="err">//</span> <span class="err">In</span> <span class="err">that</span> <span class="err">case</span><span class="p">,</span> <span class="err">it</span> <span class="err">runs</span> <span class="err">as</span> <span class="err">a</span> <span class="err">single</span> <span class="err">node.</span> <span class="err">This</span> <span class="err">mainly</span> <span class="err">impacts</span> <span class="err">the</span>
+    <span class="err">//</span> <span class="err">behavior</span> <span class="err">of</span> <span class="err">the</span> <span class="err">ClusterDistributor,</span> <span class="err">ClusterMonitor,</span> <span class="err">RuntimeAdminActor</span>
+    <span class="err">//</span> <span class="err">and</span> <span class="err">MachineAdmin</span> <span class="err">actors.</span>
     <span class="err">enable</span> <span class="err">=</span> <span class="err">true</span>
     <span class="err">seed-nodes</span> <span class="err">=</span> <span class="err">[</span><span class="nt">&quot;akka.tcp://coral@&quot;</span><span class="err">$</span><span class="p">{</span><span class="err">akka.remote.netty.tcp.hostname</span><span class="p">}</span><span class="s2">&quot;:&quot;</span><span class="err">$</span><span class="p">{</span><span class="err">akka.remote.netty.tcp.port</span><span class="p">}</span><span class="err">]</span>
   <span class="p">}</span>

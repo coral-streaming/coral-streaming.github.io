@@ -2,6 +2,7 @@
 title: History
 layout: default
 topic: Overview
+topic_order: 1
 order: 5
 ---
 <!--
@@ -30,6 +31,16 @@ Steven Raemaekers and Natalino Busa started working on the Coral platform at [IN
 #### Steven Raemaekers
 
 [Steven Raemaekers](https://nl.linkedin.com/in/steven-raemaekers-a2120b15) has worked on the Coral platform for over a year now. Steven holds a PhD in Software Engineering from the [Technical University Delft](http://www.tudelft.nl). Steven has performed research on the maintainability and evolution of large software systems. Steven is a big fan of Scala and tries to avoid writing `vars` and `Await.results` unless he really, really has to.
+
+#### <a href="https://www.linkedin.com/in/rvdwenden">Rob van den Wenden</a>
+
+#### <a href="https://nl.linkedin.com/in/olgareznik">Olga Reznik</a>
+
+#### <a href="https://nl.linkedin.com/in/jens-kat-31030bba">Jens Kat</a>
+
+#### <a href="https://nl.linkedin.com/in/fred-teunissen-4039086">Fred Teunissen</a>
+
+#### <a href="https://nl.linkedin.com/in/erik-de-nooij-93ab1a">Erik de Nooij</a>
 
 ### Special thanks to
 

@@ -28,11 +28,17 @@ The following prerequisites exist to run Coral:
 - **API knowledge**  
 Basic knowledge of RESTful interfaces and JSON. Coral is controlled through a RESTful HTTP interface. At this moment, there is no visual interface yet, so the application can only be controlled through its HTTP API.
 - **Cassandra**  
-A running Cassandra instance. To download the latest version of Cassandra, visit [http://cassandra.apache.org](http://cassandra.apache.org). We have not tested running Coral with older versions of Cassandra. For this reason, the latest version is recommended.
+A running Cassandra instance. To download the latest version of Cassandra, visit [http://cassandra.apache.org](http://cassandra.apache.org). 
 - **Kafka**  
-A running Kafka instance. To download the latest version of Kafka, visit the [website](http://kafka.apache.org). We have not tested running Coral with older versions of Kafka. For this reason, the latest version is recommended.
+A running Kafka instance. To download the latest version of Kafka, visit the [website](http://kafka.apache.org). 
+- **Spark**  
+A running Spark instance is needed if you want to use Spark for state calculation. To download the latest version of Spark, visit [http://spark.apache.org](http://spark.apache.org).
+- **ElasticSearch**  
+A running instance of ElasticSearch is needed if you want to search JSON events from the event log. To download the latest version of ElasticSearch, visit [https://www.elastic.co](https://www.elastic.co).
 - **HTTP client**  
 An HTTP client. There are a lot of different ways to issue commands to Coral, all of which use HTTP. A convenient way to send API calls to Coral is with [Postman](http://www.getpostman.com), a browser plugin for [Google Chrome](https://www.google.com/chrome). It is also possible to use `curl`, a bash command line tool, to enter the commands. It is also possible to write a [Python](https://www.python.org) script to enter the commands. A python or bash script has the advantage that combinations of commands can be stored and later executed. So pick your favorite HTTP client!
+
+We have not tested Coral against old versions of these tools, for this reason it is recommended to download the latest version of these programs.
 
 If you are compiling from source and you want to obtain the latest version from GitHub, the following additional prerequisites exist:
 

@@ -68,20 +68,97 @@ Creates a new runtime on the platform. A runtime contains actors and links betwe
 
 <distribution>:
 {
-  "mode": string,
-  ("machine": {
-    "ip": string,
-    "port": int
-  })
+  "mode": <mode>,
+  ("copies": int,)
+  ("machines": (<mode> | <machine_array>),) |
+  ("machine": <machine_def>)
 }
+
+<machine_array>: [<machine_def>, ...]
+  
+<machine_def>:
+{
+  "ip": string,
+  "port": int
+}
+
+<mode>: "predefined" | "duplicate" | 
+  "local" | "round-robin" | 
+  "random" | "least-nr-actors" | 
+  "least-nr-runtimes" | "least-busy"
+
 {% endhighlight %}
 
 The "owner" field is optional, and can be either the unique name of the user or an UUID. If no owner field is provided, the current owner is assumed. When "accept-all" authentication is used, a user with the name "coral" is assumed. If the specified owner is not equal to the currently logged in user, the request is rejected. This may be changed in future releases, when a runtime on behalf of another user can be created.
 
 The projectid is optional and is a planned future feature of the Coral platform. Currently, it is not used. The "actors" section contains actor definitions, which can be found in the [Actor Overview](Overview-ActorOverview.html). The "links" section contains all links between actors. The names mentioned in "from" and "to" must be existing names in the actor definition section.
 
+### Distribution section
+
 The distribution specification is optional and specifies the distribution mechanism of the runtime on the Coral platform. The mode field can be any of ones specified [here](Overview-Architecture#distribution).
-The "machine" field is only necessary when the "predefined" mode is used. If no distribution section is present, the platform distribution settings will be used.
+The "machine" field is only necessary when the "predefined" mode is used. If no distribution section is present, the platform distribution settings will be used and a single copy will be instantiated.
+
+The field `mode` in the distribution section specifies what the distribution setting for the runtime copies is. It can be either `duplicate` or `predefined`. 
+
+In the case of `duplicate`, the `machines` field can either be:
+
+-  The name of the distribution setting, as specified [here](Overview-Architecture.html#distribution): `local`, `round-robin`, `random`, `least-nr-actors`, `least-nr-runtimes` or `least-busy`.
+
+{% highlight json %}
+{
+  "distribution": {
+    "mode": "duplicate",
+    "copies": 5,
+    "machines": "round-robin"   
+  }
+}
+{% endhighlight %}
+
+- or, an array of machines:
+
+{% highlight json %}
+{
+  "distribution": {
+    "mode": "duplicate",
+    "copies": 2,
+    "machines": [{
+      "ip": "153.253.36.85",
+      "port": 2551
+    }, {
+      "ip": "173.142.26.31",
+      "port": 2551
+    }]
+  }
+}
+{% endhighlight %}
+
+In the case of `predefined`, the `machines` field is a single machine:
+
+{% highlight json %}
+{
+  "distribution": {
+    "mode": "predefined",
+    "machine": {
+      "ip": "127.0.0.1",
+      "port": 2551
+    }
+  }
+}
+{% endhighlight %}
+
+Below, an example of a distribution section of a new runtime is shown, which deploys five runtime copies on five different machines in round-robin fashion.
+
+{% highlight json %}
+{
+   ...,
+   "distribution": {
+      "mode": "duplicate",
+      "copies": 5,
+      "machines": "round-robin"   
+   }
+}
+{% endhighlight %}
+
 
 ### Example
 
@@ -119,6 +196,8 @@ The "machine" field is only necessary when the "predefined" mode is used. If no 
     }
 }
 {% endhighlight %}
+
+This will create a new runtime which is deployed on machine `127.0.0.1` with port 2551. Since only a single machine is provided and no `copies` argument is given, a single copy is assumed.
 
 ### JSON output
 

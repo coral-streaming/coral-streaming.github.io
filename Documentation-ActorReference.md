@@ -2,7 +2,8 @@
 title: Actor Reference
 layout: default
 topic: Documentation
-order: 2
+topic_order: 3
+order: 1
 ---
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,8 +24,11 @@ order: 2
 
 ## Actors
 
+This is an overview of all actors currently available in the system. To see more information about a specific actor, click on the name.
+
 - [CassandraActor](Actors-CassandraActor.html)
 - [FsmActor](Actors-FsmActor.html)
+- [FunctionActor](Actors-FunctionActor.html)
 - [GeneratorActor](Actors-GeneratorActor.html)
 - [GroupByActor](Actors-GroupByActor.html)
 - [HttpBroadcastActor](Actors-HttpBroadcastActor.html)
@@ -37,6 +41,7 @@ order: 2
 - [LookupActor](Actors-LookupActor.html)
 - [SampleActor](Actors-SampleActor.html)
 - [StatsActor](Actors-StatsActor.html)
+- [TabulateActor](Actors-TabulateActor.html)
 - [ThresholdActor](Actors-ThresholdActor.html)
 - [WindowActor](Actors-WindowActor.html)
 - [ZscoreActor](Actors-ZscoreActor.html)

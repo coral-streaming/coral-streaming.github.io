@@ -177,10 +177,10 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-StateCalculation.html">
+                    	    <a href="/Documentation-ActorReference.html">
 	                        	
-                	        			State calculation
-                    	    	
+        	                			Actor Reference
+            	            		
 							</a>
     	                    </div>
         	                </div>
@@ -201,10 +201,46 @@
         	            
             	            <div class="row">
                 	        <div class="col-md-12">
-                    	    <a href="/Documentation-ActorReference.html">
+                    	    <a href="/Documentation-HandlingAndForwarding.html">
 	                        	
-        	                			Actor Reference
-            	            		
+                	        			Handling and forwarding
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-EventLog.html">
+	                        	
+                	        			The event log
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-StateCalculation.html">
+	                        	
+                	        			State calculation
+                    	    	
+							</a>
+    	                    </div>
+        	                </div>
+            	        
+                	
+        	            
+            	            <div class="row">
+                	        <div class="col-md-12">
+                    	    <a href="/Documentation-ScalingOut.html">
+	                        	
+                	        			Scaling out
+                    	    	
 							</a>
     	                    </div>
         	                </div>
@@ -244,6 +280,10 @@
                 	</div>
 	                
     	            
+        	            
+                	
+        	            
+                	
         	            
                 	
         	            
@@ -381,19 +421,90 @@
 
 <span class="err">&lt;distribution&gt;:</span>
 <span class="p">{</span>
-  <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="err">string</span><span class="p">,</span>
-  <span class="err">(</span><span class="nt">&quot;machine&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="err">string</span><span class="p">,</span>
-    <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="err">int</span>
-  <span class="p">}</span><span class="err">)</span>
-<span class="p">}</span></code></pre></figure>
+  <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="err">&lt;mode&gt;</span><span class="p">,</span>
+  <span class="err">(</span><span class="nt">&quot;copies&quot;</span><span class="p">:</span> <span class="err">int</span><span class="p">,</span><span class="err">)</span>
+  <span class="err">(</span><span class="nt">&quot;machines&quot;</span><span class="p">:</span> <span class="err">(&lt;mode&gt;</span> <span class="err">|</span> <span class="err">&lt;machine_array&gt;)</span><span class="p">,</span><span class="err">)</span> <span class="err">|</span>
+  <span class="err">(</span><span class="nt">&quot;machine&quot;</span><span class="p">:</span> <span class="err">&lt;machine_def&gt;)</span>
+<span class="p">}</span>
+
+<span class="err">&lt;machine_array&gt;:</span> <span class="p">[</span><span class="err">&lt;machine_def&gt;</span><span class="p">,</span> <span class="err">...</span><span class="p">]</span>
+  
+<span class="err">&lt;machine_def&gt;:</span>
+<span class="p">{</span>
+  <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="err">string</span><span class="p">,</span>
+  <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="err">int</span>
+<span class="p">}</span>
+
+<span class="err">&lt;mode&gt;:</span> <span class="s2">&quot;predefined&quot;</span> <span class="err">|</span> <span class="s2">&quot;duplicate&quot;</span> <span class="err">|</span> 
+  <span class="s2">&quot;local&quot;</span> <span class="err">|</span> <span class="s2">&quot;round-robin&quot;</span> <span class="err">|</span> 
+  <span class="s2">&quot;random&quot;</span> <span class="err">|</span> <span class="s2">&quot;least-nr-actors&quot;</span> <span class="err">|</span> 
+  <span class="s2">&quot;least-nr-runtimes&quot;</span> <span class="err">|</span> <span class="s2">&quot;least-busy&quot;</span></code></pre></figure>
 
 <p>The “owner” field is optional, and can be either the unique name of the user or an UUID. If no owner field is provided, the current owner is assumed. When “accept-all” authentication is used, a user with the name “coral” is assumed. If the specified owner is not equal to the currently logged in user, the request is rejected. This may be changed in future releases, when a runtime on behalf of another user can be created.</p>
 
 <p>The projectid is optional and is a planned future feature of the Coral platform. Currently, it is not used. The “actors” section contains actor definitions, which can be found in the <a href="Overview-ActorOverview.html">Actor Overview</a>. The “links” section contains all links between actors. The names mentioned in “from” and “to” must be existing names in the actor definition section.</p>
 
+<h3 id="distribution-section">Distribution section</h3>
+
 <p>The distribution specification is optional and specifies the distribution mechanism of the runtime on the Coral platform. The mode field can be any of ones specified <a href="Overview-Architecture#distribution">here</a>.
-The “machine” field is only necessary when the “predefined” mode is used. If no distribution section is present, the platform distribution settings will be used.</p>
+The “machine” field is only necessary when the “predefined” mode is used. If no distribution section is present, the platform distribution settings will be used and a single copy will be instantiated.</p>
+
+<p>The field <code>mode</code> in the distribution section specifies what the distribution setting for the runtime copies is. It can be either <code>duplicate</code> or <code>predefined</code>.</p>
+
+<p>In the case of <code>duplicate</code>, the <code>machines</code> field can either be:</p>
+
+<ul>
+  <li>The name of the distribution setting, as specified <a href="Overview-Architecture.html#distribution">here</a>: <code>local</code>, <code>round-robin</code>, <code>random</code>, <code>least-nr-actors</code>, <code>least-nr-runtimes</code> or <code>least-busy</code>.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;distribution&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;duplicate&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;copies&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nt">&quot;machines&quot;</span><span class="p">:</span> <span class="s2">&quot;round-robin&quot;</span>   
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li>or, an array of machines:</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;distribution&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;duplicate&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;copies&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">&quot;machines&quot;</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;153.253.36.85&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">2551</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;173.142.26.31&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">2551</span>
+    <span class="p">}]</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In the case of <code>predefined</code>, the <code>machines</code> field is a single machine:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;distribution&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;predefined&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;machine&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">2551</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Below, an example of a distribution section of a new runtime is shown, which deploys five runtime copies on five different machines in round-robin fashion.</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
+   <span class="err">...,</span>
+   <span class="nt">&quot;distribution&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;duplicate&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;copies&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nt">&quot;machines&quot;</span><span class="p">:</span> <span class="s2">&quot;round-robin&quot;</span>   
+   <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
 
 <h3 id="example">Example</h3>
 
@@ -429,6 +540,8 @@ The “machine” field is only necessary when the “predefined” mode is used
       <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
+
+<p>This will create a new runtime which is deployed on machine <code>127.0.0.1</code> with port 2551. Since only a single machine is provided and no <code>copies</code> argument is given, a single copy is assumed.</p>
 
 <h3 id="json-output">JSON output</h3>
 

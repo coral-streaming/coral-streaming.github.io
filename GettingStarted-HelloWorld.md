@@ -2,6 +2,7 @@
 title: Hello World
 layout: default
 topic: Getting started
+topic_order: 2
 order: 3
 ---
 <!--
