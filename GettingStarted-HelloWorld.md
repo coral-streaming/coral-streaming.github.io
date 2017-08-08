@@ -125,7 +125,7 @@ To start the platform, enter the following command:
 java -cp "coral-runtime-0.0.131.jar" \
     io.coral.api.Boot start \
 	-ai "0.0.0.0" -p 8000 -ah "127.0.0.1" \
-	-ap 2551 -am "coral" -ccp "192.168.100.101" \
+	-ap 2555 -am "coral" -ccp "192.168.100.101" \
 	-cp 9042 -k "coral" -nc -ll INFO
 {% endhighlight %}
 
